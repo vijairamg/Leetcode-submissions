@@ -9,14 +9,12 @@ public:
         
         for(int r = 0; r < nums.size(); r++){
             
-            if(!q.empty()){
-                while(!q.empty() && q.front() < l){
-                    q.pop_front();
-                }
+            while(!q.empty() && q.front() < l){
+                q.pop_front();
+            }
 
-                while(!q.empty() && nums[q.back()] <= nums[r]){
-                    q.pop_back();
-                }
+            while(!q.empty() && nums[q.back()] <= nums[r]){
+                q.pop_back();
             }
             
             q.push_back(r);
@@ -26,7 +24,6 @@ public:
                 continue;
             }
             
-            // cout<<l<<" "<<nums[q.front()]<<" "<<nums[q.back()]<<" "<<endl;
             res.push_back(nums[q.front()]);
             l+=1;
         }
