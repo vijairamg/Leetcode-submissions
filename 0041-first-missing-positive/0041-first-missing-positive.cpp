@@ -15,14 +15,10 @@ public:
             }
             
             if(nums[index] == 0){
-                nums[index] = -(nums.size()+1);
+                nums[index] = -(index+1);
             }else{
                 nums[index] = -(abs(nums[index]));
             }            
-        }
-        
-        for(int i = 0; i < nums.size(); i++){
-            cout<<nums[i]<<endl;
         }
         
         for(int i = 1; i <= nums.size(); i++){
