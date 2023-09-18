@@ -14,7 +14,7 @@ public:
             
             c2[s2[r]-'a']+=1;    
             
-            while((r-l+1) == s1.size()){
+            if((r-l+1) == s1.size()){
                 if(c1 == c2){
                     return true;
                 }
