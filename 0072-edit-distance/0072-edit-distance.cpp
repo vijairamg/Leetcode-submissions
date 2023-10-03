@@ -26,7 +26,7 @@ private:
             return dp[{i,j}];
         }
         
-        int ans = INT_MAX;
+        int ans = word1.size()+word2.size();
                 
         //same
         if(word1[i] == word2[j]){
@@ -34,19 +34,13 @@ private:
         }
         
         //insert
-        int ins = dfs(i,j+1);
-        ins = ins != INT_MAX ? ins+1 : ins;
-        ans = min(ans,ins);
+        ans = min(ans,dfs(i,j+1)+1);
         
         //delete
-        int del = dfs(i+1,j);
-        del = del != INT_MAX ? del+1 : del;
-        ans = min(ans,del);
+        ans = min(ans,dfs(i+1,j)+1);
         
         //replace
-        int rel = dfs(i+1,j+1);
-        rel = rel != INT_MAX ? rel+1 : rel;
-        ans = min(ans,rel);
+        ans = min(ans,dfs(i+1,j+1)+1);
         
         dp[{i,j}] = ans;
         return dp[{i,j}];
