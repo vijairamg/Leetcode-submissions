@@ -19,12 +19,6 @@ public:
        
         ll diff = abs(sum1-sum2);
         
-        if(diff == 0){
-            if(z1 == 0 && z2 == 0){
-                return sum1;
-            }
-        }
-        
         if(z1 == 0 && sum1 < sum2 + z2)
             return -1;
         
