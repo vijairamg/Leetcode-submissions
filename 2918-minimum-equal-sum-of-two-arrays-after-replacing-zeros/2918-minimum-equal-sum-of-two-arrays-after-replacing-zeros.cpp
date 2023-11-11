@@ -24,8 +24,6 @@ public:
                 return sum1;
             }else if(z1 * z2 == 0){
                 return -1;
-            }else{
-                return sum1+max(z1,z2);
             }
         }
         
