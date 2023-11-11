@@ -22,8 +22,6 @@ public:
         if(diff == 0){
             if(z1 == 0 && z2 == 0){
                 return sum1;
-            }else if(z1 * z2 == 0){
-                return -1;
             }
         }
         
