@@ -10,10 +10,7 @@ public:
             
             if(nums1[i] <= nums1[n-1] && nums2[i] <= nums2[n-1])
                 continue;
-            
-            if(max(nums1[i],nums2[i]) > max(nums1[n-1],nums2[n-1]))
-                return n+1;
-            
+                        
             if(nums1[i] > nums2[n-1] || nums2[i] > nums1[n-1])
                 return n+1;
             
