@@ -11,22 +11,15 @@ public:
         if(dict.size() < 2){
             return 0;
         }
-        
-       // for(const auto& [key,value] : count){
-       //     cout<<key<<" "<<value<<endl;
-       // }
-       
+         
         long long count = 0;
         
-        for(int i = 0; i < 26; i++){
-            
-            char a = 'a' + i;
-            
+        for(char a = 'a'; a <= 'z' ; a++){
+             
             if(dict.find(a) == dict.end())
                 continue;
                         
-            for(int j = i+1; j < 26; j++){
-                char b = 'a' + j;
+            for(char b = a+1; b <= 'z'; b++){
                 
                 if(dict.find(b) == dict.end())
                     continue;
@@ -34,7 +27,7 @@ public:
                 int aKeys = dict[a].size();
                 int bKeys = dict[b].size();
                  
-                for(const auto& suffix : dict[a]){
+                for(const string& suffix : dict[a]){
                     if(dict[b].find(suffix) != dict[b].end()){
                         aKeys--;
                         bKeys--;
@@ -42,7 +35,6 @@ public:
                 }
                 
                 count += 2 * (aKeys*bKeys);
-                //cout<<a<<" "<<b<<" "<<count<<endl;    
             }
         }
         
