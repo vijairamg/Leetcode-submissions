@@ -7,9 +7,8 @@ public:
         
         int coins = 0;
         
-        for(int i = piles.size()-2; i >=n; i-=2){
+        for(int i = piles.size()-2; i >=n; i-=2)
             coins += piles[i];
-        }
         
         return coins;
     }
