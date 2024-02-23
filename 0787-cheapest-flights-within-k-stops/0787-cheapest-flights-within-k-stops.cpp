@@ -1,45 +1,65 @@
-typedef pair<int, int> pi;
-
 class Solution {
 public:
-    int findCheapestPrice(int n, vector<vector<int>>& times, int src, int dst, int k) {
-        
-        map<int,vector<pair<int,int>>> edges;
-        for(int i = 0; i < times.size(); i++){
-            edges[times[i][0]].push_back({times[i][1],times[i][2]});
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+        // build adjacency matrix
+        vector<vector<int>> adj(n, vector<int>(n));
+        for (int i = 0; i < flights.size(); i++) {
+            vector<int> flight = flights[i];
+            adj[flight[0]][flight[1]] = flight[2];
         }
         
-        vector<int> dp(n,INT_MAX);
+        // shortest distances
+        vector<int> distances(n, INT_MAX);
+        distances[src] = 0;
+        // shortest steps
+        vector<int> currStops(n, INT_MAX);
+        currStops[src] = 0;
         
-        int steps = 0;
+        // priority queue -> (cost, node, stops)
+        priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
+        pq.push({0, src, 0});
         
-        priority_queue<pi,vector<pi>,greater<pi>> q;
-        q.push({0,src});
-        
-        while(steps <= k+1){
+        while (!pq.empty()) {
+            int cost = pq.top()[0];
+            int node = pq.top()[1];
+            int stops = pq.top()[2];
+            pq.pop();
             
-            priority_queue<pi,vector<pi>,greater<pi>> new_q;
-            
-            while(!q.empty()){
-                auto cur = q.top();
-                q.pop();
-                
-                int node = cur.second;
-                int cost = cur.first;
-                
-                if(cost < dp[node]){
-                    dp[node] = cost;
-                    
-                   for(int i = 0; i < edges[node].size(); i++){
-                        new_q.push({edges[node][i].second+cost,edges[node][i].first});
-                    }
-                }            
+            // if destination is reached, return cost to get here
+            if (node == dst) {
+                return cost;
             }
             
-            q = new_q;
-            steps++;
+            // if no more steps left, continue
+            if (stops == k + 1) {
+                continue;
+            }
+            
+            // check & relax all neighboring edges
+            for (int neighbor = 0; neighbor < n; neighbor++) {
+                if (adj[node][neighbor] > 0) {
+                    int currCost = cost;
+                    int neighborDist = distances[neighbor];
+                    int neighborWeight = adj[node][neighbor];
+                    
+                    // check if better cost
+                    int currDist = currCost + neighborWeight;
+                    if (currDist < neighborDist || stops + 1 < currStops[neighbor]) {
+                        pq.push({currDist, neighbor, stops + 1});
+                        distances[neighbor] = currDist;
+                        currStops[neighbor] = stops;
+                    } else if (stops < currStops[neighbor]) {
+                        // check if better steps
+                        pq.push({currDist, neighbor, stops + 1});
+                    }
+                    currStops[neighbor] = stops;
+                }
+            }
         }
-              
-        return dp[dst] == INT_MAX ? -1 : dp[dst];
+        
+        if (distances[dst] == INT_MAX) {
+            return -1;
+        }
+        return distances[dst];
     }
 };
