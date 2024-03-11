@@ -1,59 +1,98 @@
 class Solution {
 public:
-    class Node {
-        public:
-            Node* child[26];
-            int count = 0;
-        
+    
+    struct Node{
+        Node* child[26];
+        int count = 0;
     };
     
-    void add(Node* head, string s, int ind){
+    void add(Node* head, string word){
+        
         Node* ptr = head;
-        for(int i = ind; i < s.size(); ++i){
-            int c = s[i] - 'a';
-            if(ptr->child[c] == NULL) ptr->child[c] = new Node();
-            ptr = ptr->child[c];
-            ptr->count++;
+        
+        for(int i = 0; i < word.size(); i++){
+            
+            int cur = word[i]-'a';
+            
+            if(ptr->child[cur] == nullptr){
+                ptr->child[cur] = new Node();
+            }
+            
+            ptr = ptr->child[cur];
+            ptr->count+=1;
         }
+        
     }
     
-    void remove(Node* head, string s, int ind){
+    void remove(Node* head, string word){
+        
         Node* ptr = head;
-        for(int i = ind; i < s.size(); ++i){
-            ptr = ptr->child[s[i] - 'a'];
-            ptr->count--;
+        
+        for(int i = 0; i < word.size(); i++){
+            int cur = word[i]-'a';
+            ptr = ptr->child[cur];
+            ptr->count-=1;
         }
+        
     }
     
-    string check(Node* head, string s, int ind){
+    string check(Node* head, string s){
         Node* ptr = head;
         string ans = "";
-        for(int i = ind; i < s.size(); ++i){
+        for(int i = 0; i < s.size(); ++i){
             int c = s[i] - 'a';
             if(ptr->child[c] == NULL) return ans;
             ans += s[i];
             ptr = ptr->child[c];
             if(ptr->count < 1) return ans;
         }
-        return s + s;
+        return string(21,'s');
     }
     
     vector<string> shortestSubstrings(vector<string>& arr) {
-        vector<string> ans;
+        
         Node* head = new Node();
-        for(auto s: arr){             // Add all the strings to the trie
-            for(int i = 0; i < s.size(); ++i) add(head, s, i);   
-        }
-        for(auto s: arr){
-            string res = s + s;
-            for(int i = 0; i < s.size(); ++i) remove(head, s, i);  // remove the current string from trie
-            for(int i = 0; i < s.size(); ++i){                     // iterate over each substring starting at i th and check for the uncommon string length
-                string t = check(head, s, i);              
-                if(t.size() < res.size() || (t.size() == res.size() && t < res) ) res = t;  // store it in result if length is less or lexicographically smaller if equal 
+        
+        for(string a : arr){
+            for(int i = 0; i < a.size(); i++){
+                for(int j = i; j < a.size(); j++){
+                    // cout<<a.substr(i,j-i+1)<<endl;
+                    add(head,a.substr(i,j-i+1));
+                }
             }
-            ans.push_back((res.size() <= s.size())?res: "");        // add res to final answer
-            for(int i = 0; i < s.size(); ++i) add(head, s, i);      // add back the current string to the trie
         }
-        return ans;
+        
+        vector<string> res;
+            
+        for(string a : arr){
+            // cout<<endl;
+            string s = a + a;
+            
+            for(int i = 0; i < a.size(); i++){
+                for(int j = i; j < a.size(); j++){
+                    // cout<<a.substr(i,j-i+1)<<endl;
+                    remove(head,a.substr(i,j-i+1));
+                }
+            }
+            // cout<<endl;
+            for(int i = 0; i < a.size(); i++){
+                for(int j = i; j < a.size(); j++){
+                    string t = check(head,a.substr(i,j-i+1));
+                    // cout<<a.substr(i,j-i+1)<<" "<<t<<endl;
+                    if(t.size() < s.size() || (t.size() == s.size() && t < s)) s = t;
+                }
+            }
+            
+            res.push_back( s.size() <= a.size() ? s: "");
+            
+            for(int i = 0; i < a.size(); i++){
+                for(int j = i; j < a.size(); j++){
+                    add(head,a.substr(i,j-i+1));
+                }
+            }
+            
+        }
+        
+        return res;
     }
 };
